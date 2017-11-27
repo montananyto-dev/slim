@@ -3,9 +3,9 @@
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
-$app->post('/home/add/users',function($request){
+$app->post('/home/add/users',function($request,$response){
 
-    echo 'test';
+    
 
     require_once('dbconnect.php');
     //prepared statements
@@ -24,6 +24,7 @@ $app->post('/home/add/users',function($request){
     echo($password);
     echo($name);
   
+    
     echo "inserted";
 
 });
