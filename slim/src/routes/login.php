@@ -1,6 +1,6 @@
 <?php
 
-$app->get('/home/users',function(){
+$app->get('/home/login',function(){
 
 require_once('dbconnect.php');
 
