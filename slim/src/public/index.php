@@ -17,17 +17,21 @@ $app = new \Slim\App($settings);
 
 //locally
 //require_once('./routes/login.php');
-//require_once('./routes/insertUser.php');
 //require_once('./routes/myname.php');
-//require_once ('./routes/testDBconnection.php');
+//require_once ('./routes/dbconnect.php');
 //require_once ('./routes/user.php');
+//require_once('./routes/module');
+//require_once('./routes/organisation.php');
+//require_once('./routes/module.php');
 
 
 require_once('../routes/login.php');
-require_once('../routes/insertUser.php');
 require_once('../routes/myname.php');
 require_once ('../routes/dbconnect.php');
 require_once ('../routes/user.php');
+require_once('../routes/module');
+require_once('../routes/organisation.php');
+require_once('../routes/module.php');
 
 
 $app->run();

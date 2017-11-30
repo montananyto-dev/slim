@@ -1,12 +1,6 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: tony
- * Date: 29/11/2017
- * Time: 21:43
- */
 
-
+//view users
 $app->get('/view/users',function(){
 
     require_once('dbconnect.php');
@@ -14,8 +8,7 @@ $app->get('/view/users',function(){
     $connection = connect_db();
 
 
-    $query = "SELECT 
-
+    $query = "SELECT  
                 users.user_first_name first_name,
                 users.user_last_name last_name,
                 users.user_password password,
@@ -24,9 +17,7 @@ $app->get('/view/users',function(){
                 course.course_name course ,
                 users.user_departement departement,
                 users.user_about_me about_me
-                
                 FROM users
-                
                 inner join users_course
                 on users.user_id = users_course.user_id
                 inner join course
@@ -35,7 +26,6 @@ $app->get('/view/users',function(){
                 on course.course_id = module_course.course_id
                 inner join module
                 on module_course.module_id = module.module_id
-                
                 group by users.user_id";
 
     $result = $connection->query($query);
@@ -47,4 +37,28 @@ $app->get('/view/users',function(){
         header('Content-Type: application/json');
         echo json_encode($data);
     }
+});
+
+//insert a user
+$app->post('/home/add/users',function($request,$response){
+
+    require_once('dbconnect.php');
+    $connection = connect_db();
+
+    //prepared statements
+    $query = "INSERT INTO `kingsub3_tony`.`tonyoo` (`username`, `name`, `password`) VALUES (?,?,?)";
+
+    $stmt = $connection->prepare($query);
+    $stmt->bind_param("sss", $username, $name, $password);
+    $username = $request->getParsedBody()['username'];
+    $name = $request->getParsedBody()['name'];
+    $password = $request->getParsedBody()['password'];
+    $stmt->execute();
+
+    echo($username);
+    echo($password);
+    echo($name);
+
+    echo "inserted";
+
 });
