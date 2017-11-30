@@ -17,11 +17,22 @@
 
 
 //connect locally
-function connect_db (){
-    $server = 'localhost'; // this may be an ip address instead
-    $user = 'root';
-    $pass = '';
-    $database = 'kingsub3_fyp';
+//function connect_db (){
+//    $server = 'localhost'; // this may be an ip address instead
+//    $user = 'root';
+//    $pass = '';
+//    $database = 'kingsub3_fyp';
+//    $connection = new mysqli($server, $user, $pass, $database);
+//
+//    return $connection;
+//}
+
+//connect live DB
+function connect_db() {
+    $server = '108.179.213.60'; // this may be an ip address instead
+    $user = 'kingsub3_tony';
+    $pass = 'Kingston2017!';
+    $database = 'kingsub3_FYP';
     $connection = new mysqli($server, $user, $pass, $database);
 
     return $connection;

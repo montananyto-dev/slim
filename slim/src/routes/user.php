@@ -7,7 +7,7 @@
  */
 
 
-$app->get('/home/users',function(){
+$app->get('/view/users',function(){
 
     require_once('dbconnect.php');
 
@@ -20,7 +20,7 @@ users.user_first_name first_name,
 users.user_last_name last_name,
 users.user_password password,
 users.user_email email,
-users.user_phone_number phone_numer,
+users.user_phone_number phone_number,
 course.course_name course ,
 users.user_departement departement,
 users.user_about_me about_me
