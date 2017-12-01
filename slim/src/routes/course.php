@@ -1,13 +1,12 @@
 <?php
 
-
-$app->get('view/course',function(){
+$app->get('/view/course',function(){
 
     require_once('dbconnect.php');
 
     $connection = connect_db();
 
-    $query = "SELECT * FROM COURSE";
+    $query = "SELECT * FROM course";
 
     $result = $connection->query($query);
 
@@ -16,7 +15,7 @@ $app->get('view/course',function(){
     }
     if (isset($data)){
         header('Content-Type: application/json');
-        echo json_encode($data);
+        return json_encode($data);
     }
 
 });

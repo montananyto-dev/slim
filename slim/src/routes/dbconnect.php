@@ -1,4 +1,8 @@
 <?php
+
+use Psr\Http\Message\RequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
+
 //live connection
 //function connect_db() {
 //    $server = '108.179.213.60'; // this may be an ip address instead

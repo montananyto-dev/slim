@@ -1,21 +1,18 @@
 <?php
 
-$app->get('view/organisation', function () {
+$app->get('/view/organisation', function () {
 
     require_once('dbconnect.php');
     $connection = connect_db();
-    $query = "SELECT * FROM ORGANISATION";
+    $query = "SELECT * FROM organisation";
     $result = $connection->query($query);
 
-    while ($row = $result->fetch_assoc($result)) {
-
+    while ($row = $result->fetch_assoc()) {
         $data[] = $row;
-
-        if (isset($data)) {
-            header('Content-Type: application/json');
-            echo json_encode($data);
-        }
-
     }
-
+    if (isset($data)) {
+        header('Content-Type: application/json');
+        return json_encode($data);
+    }
 });
+

@@ -14,7 +14,7 @@ while($row = $result->fetch_assoc()){
 }
 if (isset($data)){
   header('Content-Type: application/json');
-  echo json_encode($data);
+  return json_encode($data);
 }
 });
 

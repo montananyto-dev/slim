@@ -1,7 +1,7 @@
 <?php
 
 //view users
-$app->get('/view/users',function(){
+$app->get('/view/user',function(){
 
     require_once('dbconnect.php');
 
@@ -35,12 +35,12 @@ $app->get('/view/users',function(){
     }
     if (isset($data)){
         header('Content-Type: application/json');
-        echo json_encode($data);
+        return json_encode($data);
     }
 });
 
 //insert a user
-$app->post('/home/add/users',function($request,$response){
+$app->post('/add/user',function($request,$response){
 
     require_once('dbconnect.php');
     $connection = connect_db();
