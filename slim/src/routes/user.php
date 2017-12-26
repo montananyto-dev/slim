@@ -40,10 +40,11 @@ $app->get('/view/user',function(){
 });
 
 //insert a user
-$app->post('/add/user',function($request,$response) use ($password) {
+$app->post('/add/user',function($request,$response) {
 
     require_once('dbconnect.php');
     $connection = connect_db();
+    $password = '';
 
     //prepared statements
     $query = "INSERT INTO kingsub3_FYP.users (user_first_name, user_last_name, user_date_of_birth) VALUES (?,?,?)";
