@@ -50,6 +50,7 @@ $app->post('/add/user', function ($request, $response) {
     user_department,
     user_date_of_birth,
     user_created_at)
+    
       VALUES (?,?,?,?,?,?,?,?,?,SYSDATE())";
 
     $organisation_id = $array['organisation'];
@@ -63,6 +64,7 @@ $app->post('/add/user', function ($request, $response) {
     $user_department = $array['department'];
 
     $stmt = $connection->prepare($query);
+
     $stmt->bind_param("sssssssss",
         $organisation_id,
         $user_type_id,
