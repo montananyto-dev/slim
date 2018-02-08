@@ -5,12 +5,8 @@
 $app->get('/view/user', function () {
 
     require_once('dbconnect.php');
-
     $connection = connect_db();
-
-
     $query = "SELECT * FROM `users`";
-
     $result = $connection->query($query);
 
     while ($row = $result->fetch_assoc()) {
@@ -21,6 +17,99 @@ $app->get('/view/user', function () {
         return json_encode($data);
     }
 });
+
+$app->get('/view/user/{id}', function ($request, $response) {
+
+    require_once('dbconnect.php');
+
+    $error = json_encode('No users for this module');
+
+
+    $connection = connect_db();
+    $id = $request->getAttribute('id');
+
+    $query = "SELECT * FROM users
+              INNER JOIN users_course
+              ON users.user_id = users_course.user_id
+              INNER JOIN course
+              ON users_course.course_id = course.course_id
+              WHERE course.course_id = $id";
+
+    $result = $connection->query($query);
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
+    if (isset($data)) {
+        header('Content-Type: application/json');
+        return json_encode($data);
+    } else {
+
+        return $error;
+    }
+
+
+});
+
+
+// edit user
+
+$app->post('/edit/user',function($request,$response){
+
+    require_once('dbconnect.php');
+    $connection = connect_db();
+
+    $validation = json_encode('THe user has been updated');
+    $error = json_encode('The user could not be update');
+
+    $user_id = $request->getParsedBody()['userIdForm'];
+    $user_first_name = $request->getParsedBody()['userFirstNameForm'];
+    $user_last_name = $request->getParsedBody()['userLastNameForm'];
+    $user_phone_number = $request->getParsedBody()['userPhoneNumberForm'];
+    $user_Email = $request->getParsedBody()['userEmailForm'];
+    $user_department = $request->getParsedBody()['userDepartmentForm'];
+
+    $user_id = array_shift( $user_id);
+    $user_first_name = array_shift( $user_first_name);
+    $user_last_name = array_shift( $user_last_name);
+    $user_phone_number = array_shift( $user_phone_number);
+    $user_Email = array_shift( $user_Email);
+    $user_department = array_shift( $user_department);
+
+    $query = "UPDATE  kingsub3_FYP.users SET
+    user_first_name = ?,
+    user_last_name = ?,
+    user_email = ?,
+    user_phone_number = ?,
+    user_department = ?
+    WHERE user_id = $user_id";
+
+
+
+    $stmt = $connection->prepare($query);
+
+    $stmt->bind_param("sssss",
+        $user_first_name,
+        $user_last_name,
+        $user_Email,
+        $user_phone_number,
+        $user_department);
+
+    $stmt->execute();
+
+    if($stmt){
+
+       return $validation;
+
+    }else{
+
+        return $error;
+    }
+
+});
+
+
+
+
 
 
 //add a user to the system
@@ -36,6 +125,7 @@ $app->post('/add/user', function ($request, $response) {
     $array = $request->getParsedBody();
 
     $user_type = $array['userType'];
+
 
     //prepared statements
     $query = "INSERT INTO kingsub3_FYP.users (

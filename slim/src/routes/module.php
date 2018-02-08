@@ -7,13 +7,10 @@ $app->get('/view/module', function () {
     require_once('dbconnect.php');
 
     $connection = connect_db();
-
     $query = "SELECT * FROM module";
-
     $result = $connection->query($query);
 
     while ($row = $result->fetch_assoc()) {
-
         $data[] = $row;
     }
     if (isset($data)) {
@@ -77,64 +74,24 @@ $app->post('/add/module', function ($request, $response) {
         $module_description = $module[$key]['moduleDescription'];
         $module_name = $module[$key]['moduleName'];
 
-        var_dump($module_year);
-        var_dump($module_description);
-        var_dump($module_name);
-
-        var_dump($key);
-
         //prepared statements
-        $query = "INSERT INTO kingsub3_FYP.module (
-
-    module_name,
-    module_year,
-    module_description,
-    module_created_at)
-
-      VALUES (?,?,?,SYSDATE())";
-
+        $query = "INSERT INTO kingsub3_FYP.module (module_name,module_year,module_description,module_created_at) VALUES (?,?,?,SYSDATE())";
         $stmt = $connection->prepare($query);
-
-        $stmt->bind_param("sss",
-
-            $module_name,
-            $module_year,
-            $module_description);
-
+        $stmt->bind_param("sss",$module_name,$module_year,$module_description);
         $stmt->execute();
 
         $module_id = mysqli_insert_id($connection);
 
-
         //prepared statements
-        $query = "INSERT INTO kingsub3_FYP.module_course(
-
-    module_id,
-    course_id)
-    
-      VALUES (?,?)";
-
+        $query = "INSERT INTO kingsub3_FYP.module_course(module_id,course_id) VALUES (?,?)";
         $stmt = $connection->prepare($query);
-
-        $stmt->bind_param("ss",
-
-            $module_id,
-            $course_id
-        );
-
+        $stmt->bind_param("ss",$module_id,$course_id);
         $stmt->execute();
-
     }
-
-
     if ($stmt) {
-
         return $validation;
-
     } else {
-
         return $error;
-
     };
 
 
