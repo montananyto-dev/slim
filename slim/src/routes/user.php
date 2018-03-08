@@ -2,6 +2,9 @@
 
 //view users
 
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+
 $app->get('/view/user', function () {
 
     require_once('dbconnect.php');
@@ -18,11 +21,29 @@ $app->get('/view/user', function () {
     }
 });
 
-$app->get('/view/user/{id}', function ($request, $response) {
+
+//
+//$app->get('/view/user', function () {
+//
+//    require_once('dbconnect.php');
+//    $connection = connect_db();
+//    $query = $connection->prepare("SELECT * FROM users");
+//    $query->execute();
+//    $result = $query->fetchAll(\PDO::FETCH_ASSOC);
+//
+//
+//    if (isset($result)) {
+//        header('Content-Type: application/json');
+//        return json_encode($result);
+//    }
+//});
+//
+
+$app->get('/view/user/{id}', function (ServerRequestInterface $request,ResponseInterface $response) {
 
     require_once('dbconnect.php');
 
-    $error = json_encode('No users for this module');
+    $response = json_encode('No users for this module');
 
 
     $connection = connect_db();
@@ -44,7 +65,7 @@ $app->get('/view/user/{id}', function ($request, $response) {
         return json_encode($data);
     } else {
 
-        return $error;
+        return $response;
     }
 
 
@@ -53,12 +74,12 @@ $app->get('/view/user/{id}', function ($request, $response) {
 
 // edit user
 
-$app->post('/edit/user',function($request,$response){
+$app->put('/edit/user',function(ServerRequestInterface $request,ResponseInterface $response){
 
     require_once('dbconnect.php');
     $connection = connect_db();
 
-    $validation = json_encode('THe user has been updated');
+    $validation = json_encode('The user has been updated');
     $error = json_encode('The user could not be update');
 
     $user_id = $request->getParsedBody()['userIdForm'];
@@ -194,7 +215,7 @@ $app->post('/add/user', function ($request, $response) {
         }
     }
 
-    if ($stmt && $stmt2 && $stmt3) {
+    if ($stmt || ($stmt2 && $stmt3)) {
 
         return $validation;
 

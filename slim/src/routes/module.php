@@ -48,7 +48,7 @@ $app->get('/return/specific[/{id:.*}]', function ($request, $response, $args) {
     } else {
 
         header('Content-Type: application/json');
-        $response = 'This course do not have any module';
+        $response = 'This course does not have any module';
         return $obj = json_encode($response);
     }
 });
