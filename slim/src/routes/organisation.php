@@ -21,7 +21,8 @@ $app->post('/add/organisation',function($request, $response)  {
 
     require_once('dbconnect.php');
     $connection = connect_db();
-    $response = json_encode('The organisation has been added to the system');
+    $validation = json_encode('The organisation has been added to the system');
+    $error = json_encode('The organisation could not be added to the system');
 
     //prepared statements
     $query = "INSERT INTO kingsub3_FYP.organisation
@@ -49,15 +50,12 @@ $app->post('/add/organisation',function($request, $response)  {
 
     $stmt->execute();
 
-
-
     if($stmt) {
 
-
-        return $response;
+        return $validation;
 
     }else{
-        echo'error';
+        return $error;
     }
 
 });
