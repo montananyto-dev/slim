@@ -18,6 +18,7 @@ require_once ('../routes/user.php');
 require_once('../routes/module.php');
 require_once('../routes/organisation.php');
 require_once('../routes/course.php');
+require_once ('../routes/project.php');
 
 
 $app->run();
