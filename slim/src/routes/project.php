@@ -38,7 +38,6 @@ $app->get('/view/project/{id}', function (ServerRequestInterface $request,Respon
 
 });
 
-
 $app->post('/add/project', function ($request, $response) {
 
     $validation = json_encode('The project has been added to the system');
