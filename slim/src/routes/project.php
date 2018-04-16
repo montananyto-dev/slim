@@ -38,6 +38,34 @@ $app->get('/view/project/{id}', function (ServerRequestInterface $request,Respon
 
 });
 
+$app->get('/view/project/projectID/{id}', function (ServerRequestInterface $request,ResponseInterface $response) {
+
+    require_once('dbconnect.php');
+
+    $response = json_encode('No project for this user');
+
+
+    $connection = connect_db();
+    $id = $request->getAttribute('id');
+
+    $query = "SELECT * FROM project
+             
+              WHERE project.project_id = $id";
+
+    $result = $connection->query($query);
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
+    if (isset($data)) {
+        header('Content-Type: application/json');
+        return json_encode($data);
+    } else {
+
+        return $response;
+    }
+
+});
+
 $app->post('/add/project', function ($request, $response) {
 
     $validation = json_encode('The project has been added to the system');

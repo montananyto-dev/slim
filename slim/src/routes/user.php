@@ -1,7 +1,5 @@
 <?php
 
-//view users
-
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -39,11 +37,11 @@ $app->get('/view/user', function () {
 //});
 //
 
-$app->get('/view/user/{id}', function (ServerRequestInterface $request,ResponseInterface $response) {
+$app->get('/view/user/course/{id}', function (ServerRequestInterface $request,ResponseInterface $response) {
 
     require_once('dbconnect.php');
 
-    $response = json_encode('No users for this module');
+    $response = json_encode('No users for this course');
 
 
     $connection = connect_db();
@@ -68,11 +66,38 @@ $app->get('/view/user/{id}', function (ServerRequestInterface $request,ResponseI
         return $response;
     }
 
-
 });
 
+$app->get('/view/user/module/{id}', function (ServerRequestInterface $request,ResponseInterface $response) {
 
-// edit user
+    require_once('dbconnect.php');
+
+    $response = json_encode('No users for this module');
+
+
+    $connection = connect_db();
+    $id = $request->getAttribute('id');
+
+    $query = "SELECT * FROM users
+              INNER JOIN users_module
+              ON users.user_id = users_module.user_id
+              INNER JOIN module
+              ON users_module.module_id = module.module_id
+              where module.module_id = $id";
+
+    $result = $connection->query($query);
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
+    if (isset($data)) {
+        header('Content-Type: application/json');
+        return json_encode($data);
+    } else {
+
+        return $response;
+    }
+
+});
 
 $app->put('/edit/user',function(ServerRequestInterface $request,ResponseInterface $response){
 
@@ -127,13 +152,6 @@ $app->put('/edit/user',function(ServerRequestInterface $request,ResponseInterfac
     }
 
 });
-
-
-
-
-
-
-//add a user to the system
 
 $app->post('/add/user', function ($request, $response) {
 

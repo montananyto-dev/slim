@@ -22,11 +22,9 @@ $app->get('/view/module', function () {
 $app->get('/return/specific[/{id:.*}]', function ($request, $response, $args) {
 
     $id = explode('/', $request->getAttribute('id'));
-
     $ids = implode(',', $id);
 
     require_once('dbconnect.php');
-
     $connection = connect_db();
 
     $query = "SELECT module.* FROM module
@@ -53,7 +51,6 @@ $app->get('/return/specific[/{id:.*}]', function ($request, $response, $args) {
     }
 });
 
-
 $app->post('/add/module', function ($request, $response) {
 
     require_once('dbconnect.php');
@@ -63,7 +60,6 @@ $app->post('/add/module', function ($request, $response) {
     $error = json_encode('The module could not be added to the system');
 
     $array = $request->getParsedBody();
-
 
     $course_id = $array['course'];
     $module = $array['module'];
