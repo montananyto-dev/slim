@@ -133,4 +133,89 @@ $app->post('/add/project', function ($request, $response) {
 
 });
 
+$app->get('/view/goal/{id}', function (ServerRequestInterface $request,ResponseInterface $response) {
 
+    require_once('dbconnect.php');
+
+    $response = json_encode('No goal for this project');
+
+
+    $connection = connect_db();
+    $id = $request->getAttribute('id');
+
+    $query = "SELECT goal.* FROM goal
+              INNER JOIN project
+              ON project.project_id = goal.project_id
+              WHERE project.project_id = $id";
+
+    $result = $connection->query($query);
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
+    if (isset($data)) {
+        header('Content-Type: application/json');
+        return json_encode($data);
+    } else {
+
+        return $response;
+    }
+
+});
+
+$app->get('/view/objective/{id}', function (ServerRequestInterface $request,ResponseInterface $response) {
+
+    require_once('dbconnect.php');
+
+    $response = json_encode('No objectives for this project');
+
+
+    $connection = connect_db();
+    $id = $request->getAttribute('id');
+
+    $query = "SELECT objective.* FROM objective
+              INNER JOIN project
+              ON project.project_id = objective.project_id
+              WHERE project.project_id = $id";
+
+    $result = $connection->query($query);
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
+    if (isset($data)) {
+        header('Content-Type: application/json');
+        return json_encode($data);
+    } else {
+
+        return $response;
+    }
+
+});
+
+$app->get('/view/workflowStep/{id}', function (ServerRequestInterface $request,ResponseInterface $response) {
+
+    require_once('dbconnect.php');
+
+    $response = json_encode('No workflow steps for this project');
+
+
+    $connection = connect_db();
+    $id = $request->getAttribute('id');
+
+    $query = "SELECT workflow_step.* FROM workflow_step
+              INNER JOIN project
+              ON project.project_id = workflow_step.project_id
+              WHERE project.project_id = $id";
+
+    $result = $connection->query($query);
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
+    if (isset($data)) {
+        header('Content-Type: application/json');
+        return json_encode($data);
+    } else {
+
+        return $response;
+    }
+
+});
