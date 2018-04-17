@@ -20,7 +20,6 @@ $app->get('/view/course',function(){
 
 });
 
-
 $app->post('/add/course',function($request,$response) {
 
     require_once('dbconnect.php');

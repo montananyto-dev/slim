@@ -16,7 +16,6 @@ $app->get('/view/organisation', function () {
     }
 });
 
-
 $app->post('/add/organisation',function($request, $response)  {
 
     require_once('dbconnect.php');

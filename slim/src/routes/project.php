@@ -219,3 +219,90 @@ $app->get('/view/workflowStep/{id}', function (ServerRequestInterface $request,R
     }
 
 });
+
+$app->get('/view/task/{id}', function (ServerRequestInterface $request,ResponseInterface $response) {
+
+    require_once('dbconnect.php');
+    $response = json_encode('No tasks for this project');
+
+    $connection = connect_db();
+    $id = $request->getAttribute('id');
+
+    $query = "SELECT task.* FROM task
+              INNER JOIN project
+              ON project.project_id = task.project_id
+              WHERE project.project_id = $id";
+
+    $result = $connection->query($query);
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
+    if (isset($data)) {
+        header('Content-Type: application/json');
+        return json_encode($data);
+    } else {
+
+        return $response;
+    }
+
+});
+
+$app->get('/view/task/{id}/{id2}', function (ServerRequestInterface $request,ResponseInterface $response) {
+
+    require_once('dbconnect.php');
+    $response = json_encode('No tasks for this project');
+
+    $connection = connect_db();
+    $project_id = $request->getAttribute('id');
+    $task_status = $request->getAttribute('id2');
+
+    $query = "SELECT task.* FROM task
+              INNER JOIN project
+              ON project.project_id = task.project_id
+              WHERE project.project_id = $project_id AND task.task_status = $task_status";
+
+    $result = $connection->query($query);
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
+    if (isset($data)) {
+        header('Content-Type: application/json');
+        return json_encode($data);
+    } else {
+
+        return $response;
+    }
+
+});
+
+$app->put('/update/task', function (ServerRequestInterface $request,ResponseInterface $response) {
+
+    require_once('dbconnect.php');
+    $connection = connect_db();
+
+    $response = json_encode('The task could not be updated');
+    $validation = json_encode('The task has been updated');
+
+    $array = $request->getParsedBody();
+    $task_status = $array['taskStatus'];
+    $projectId = $array['projectId'];
+    $taskId = $array['taskId'];
+
+    $query = "UPDATE  kingsub3_FYP.task SET
+    task_status = ?,
+    task_updated_at = SYSDATE()
+
+    WHERE project_id = $projectId AND task_id = $taskId";
+
+    $stmt = $connection->prepare($query);
+
+    $stmt->bind_param("s", $task_status);
+
+    $stmt->execute();
+
+    if ($stmt){
+        return $validation;
+    } else {
+        return $response;
+    }
+});
