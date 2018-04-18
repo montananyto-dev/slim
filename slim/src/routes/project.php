@@ -220,7 +220,7 @@ $app->get('/view/workflowStep/{id}', function (ServerRequestInterface $request,R
 
 });
 
-$app->get('/view/task/{id}', function (ServerRequestInterface $request,ResponseInterface $response) {
+$app->get('/view/allTasks/{id}', function (ServerRequestInterface $request,ResponseInterface $response) {
 
     require_once('dbconnect.php');
     $response = json_encode('No tasks for this project');
@@ -247,7 +247,7 @@ $app->get('/view/task/{id}', function (ServerRequestInterface $request,ResponseI
 
 });
 
-$app->get('/view/task/{id}/{id2}', function (ServerRequestInterface $request,ResponseInterface $response) {
+$app->get('/view/taskByStatus/{id}/{id2}', function (ServerRequestInterface $request,ResponseInterface $response) {
 
     require_once('dbconnect.php');
     $response = json_encode('No tasks for this project');
@@ -260,6 +260,34 @@ $app->get('/view/task/{id}/{id2}', function (ServerRequestInterface $request,Res
               INNER JOIN project
               ON project.project_id = task.project_id
               WHERE project.project_id = $project_id AND task.task_status = $task_status";
+
+    $result = $connection->query($query);
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
+    if (isset($data)) {
+        header('Content-Type: application/json');
+        return json_encode($data);
+    } else {
+
+        return $response;
+    }
+
+});
+
+$app->get('/view/taskByProjectAndTaskId/{id}/{id2}', function (ServerRequestInterface $request,ResponseInterface $response) {
+
+    require_once('dbconnect.php');
+    $response = json_encode('No tasks for this project');
+
+    $connection = connect_db();
+    $project_id = $request->getAttribute('id');
+    $task_id = $request->getAttribute('id2');
+
+    $query = "SELECT task.* FROM task
+              INNER JOIN project
+              ON project.project_id = task.project_id
+              WHERE project.project_id = $project_id AND task.task_id = $task_id";
 
     $result = $connection->query($query);
     while ($row = $result->fetch_assoc()) {
@@ -305,4 +333,117 @@ $app->put('/update/task', function (ServerRequestInterface $request,ResponseInte
     } else {
         return $response;
     }
+});
+
+$app->get('/view/task/comment/{id}', function (ServerRequestInterface $request,ResponseInterface $response) {
+
+    require_once('dbconnect.php');
+
+    $response = json_encode('No comments for this task');
+
+
+    $connection = connect_db();
+    $id = $request->getAttribute('id');
+
+    $query = "SELECT task_comment.* FROM task_comment
+              INNER JOIN task t on task_comment.task_id = t.task_id
+              WHERE t.task_id = $id";
+
+    $result = $connection->query($query);
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
+    if (isset($data)) {
+        header('Content-Type: application/json');
+        return json_encode($data);
+    } else {
+
+        return $response;
+    }
+});
+
+$app->get('/view/teamMembers/{id}', function (ServerRequestInterface $request,ResponseInterface $response) {
+
+    require_once('dbconnect.php');
+    $response = json_encode('No team members for this project');
+
+    $connection = connect_db();
+    $id = $request->getAttribute('id');
+
+    $query = "SELECT users.* FROM users
+              INNER JOIN users_team u 
+              on users.user_id = u.user_id
+              INNER JOIN team t 
+              on u.team_id = t.team_id
+              INNER JOIN project p 
+              on t.team_id = p.team_id
+              WHERE p.project_id = $id";
+
+    $result = $connection->query($query);
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
+    if (isset($data)) {
+        header('Content-Type: application/json');
+        return json_encode($data);
+    } else {
+
+        return $response;
+    }
+
+});
+
+$app->get('/view/comment/{id}', function (ServerRequestInterface $request,ResponseInterface $response) {
+
+    require_once('dbconnect.php');
+    $response = json_encode('No comments for this project');
+
+    $connection = connect_db();
+    $id = $request->getAttribute('id');
+
+    $query = "SELECT project_comment.* FROM project_comment
+              INNER JOIN project
+              ON project.project_id = project_comment.project_id
+              WHERE project.project_id = $id";
+
+    $result = $connection->query($query);
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
+    if (isset($data)) {
+        header('Content-Type: application/json');
+        return json_encode($data);
+    } else {
+
+        return $response;
+    }
+
+});
+
+$app->get('/view/task/{id}/{id2}', function (ServerRequestInterface $request,ResponseInterface $response) {
+
+    require_once('dbconnect.php');
+    $response = json_encode('No tasks for this project');
+
+    $connection = connect_db();
+    $project_id = $request->getAttribute('id');
+    $task_status = $request->getAttribute('id2');
+
+    $query = "SELECT task.* FROM task
+              INNER JOIN project
+              ON project.project_id = task.project_id
+              WHERE project.project_id = $project_id AND task.task_status = $task_status";
+
+    $result = $connection->query($query);
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
+    if (isset($data)) {
+        header('Content-Type: application/json');
+        return json_encode($data);
+    } else {
+
+        return $response;
+    }
+
 });
