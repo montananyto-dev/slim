@@ -1,12 +1,12 @@
 <?php
 
-
-//return all the modules
 $app->get('/view/module', function () {
 
     require_once('dbconnect.php');
-
     $connection = connect_db();
+
+    $error = "No modules are present in the system";
+
     $query = "SELECT * FROM module";
     $result = $connection->query($query);
 
@@ -16,10 +16,12 @@ $app->get('/view/module', function () {
     if (isset($data)) {
         header('Content-Type: application/json');
         return json_encode($data);
+    }else{
+        return json_encode($error);
     }
 });
 
-$app->get('/return/specific[/{id:.*}]', function ($request, $response, $args) {
+$app->get('/return/specific/module[/{id:.*}]', function ($request, $response, $args) {
 
     $id = explode('/', $request->getAttribute('id'));
     $ids = implode(',', $id);
@@ -92,3 +94,4 @@ $app->post('/add/module', function ($request, $response) {
 
 
 });
+

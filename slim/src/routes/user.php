@@ -19,29 +19,11 @@ $app->get('/view/user', function () {
     }
 });
 
-
-//
-//$app->get('/view/user', function () {
-//
-//    require_once('dbconnect.php');
-//    $connection = connect_db();
-//    $query = $connection->prepare("SELECT * FROM users");
-//    $query->execute();
-//    $result = $query->fetchAll(\PDO::FETCH_ASSOC);
-//
-//
-//    if (isset($result)) {
-//        header('Content-Type: application/json');
-//        return json_encode($result);
-//    }
-//});
-//
-
 $app->get('/view/user/course/{id}', function (ServerRequestInterface $request,ResponseInterface $response) {
 
     require_once('dbconnect.php');
 
-    $response = json_encode('No users for this course');
+    $response = json_encode('There are no users for this course');
 
 
     $connection = connect_db();
@@ -72,7 +54,7 @@ $app->get('/view/user/module/{id}', function (ServerRequestInterface $request,Re
 
     require_once('dbconnect.php');
 
-    $response = json_encode('No users for this module');
+    $response = json_encode('There are no users for this module');
 
 
     $connection = connect_db();
@@ -84,6 +66,56 @@ $app->get('/view/user/module/{id}', function (ServerRequestInterface $request,Re
               INNER JOIN module
               ON users_module.module_id = module.module_id
               where module.module_id = $id";
+
+    $result = $connection->query($query);
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
+    if (isset($data)) {
+        header('Content-Type: application/json');
+        return json_encode($data);
+    } else {
+
+        return $response;
+    }
+
+});
+
+$app->get('/view/user/organisation/{id}', function (ServerRequestInterface $request,ResponseInterface $response) {
+
+    require_once('dbconnect.php');
+
+    $response = json_encode('There are no users for this organisation');
+
+    $connection = connect_db();
+    $id = $request->getAttribute('id');
+
+    $query = "SELECT * FROM users WHERE organisation_id = $id";
+
+    $result = $connection->query($query);
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
+    if (isset($data)) {
+        header('Content-Type: application/json');
+        return json_encode($data);
+    } else {
+
+        return $response;
+    }
+
+});
+
+$app->get('/view/user/organisationName/{id}', function (ServerRequestInterface $request,ResponseInterface $response) {
+
+    require_once('dbconnect.php');
+
+    $response = json_encode('There are no organisation name for this organisation');
+
+    $connection = connect_db();
+    $id = $request->getAttribute('id');
+
+    $query = "SELECT organisation_name FROM organisation WHERE organisation_id = $id";
 
     $result = $connection->query($query);
     while ($row = $result->fetch_assoc()) {
@@ -244,3 +276,23 @@ $app->post('/add/user', function ($request, $response) {
     }
 
 });
+
+
+
+
+//
+//$app->get('/view/user', function () {
+//
+//    require_once('dbconnect.php');
+//    $connection = connect_db();
+//    $query = $connection->prepare("SELECT * FROM users");
+//    $query->execute();
+//    $result = $query->fetchAll(\PDO::FETCH_ASSOC);
+//
+//
+//    if (isset($result)) {
+//        header('Content-Type: application/json');
+//        return json_encode($result);
+//    }
+//});
+//
