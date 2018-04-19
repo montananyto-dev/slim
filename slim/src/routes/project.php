@@ -447,3 +447,43 @@ $app->get('/view/task/{id}/{id2}', function (ServerRequestInterface $request,Res
     }
 
 });
+
+$app->post('/add/comment', function ($request, $response) {
+
+    $validation = json_encode('The comment has been added to the task');
+    $error = json_encode('The comment could not be added to the task');
+
+    require_once('dbconnect.php');
+    $connection = connect_db();
+
+    $array = $request->getParsedBody();
+
+    $task_comment_description = $array['description'];
+    $task_id = $array['taskIdForm'];
+    $task_comment_creator = $array['creator'];
+
+    $query = "INSERT INTO kingsub3_FYP.task_comment (
+              task_comment.task_id,
+              task_comment.task_comment_description,
+              task_comment.task_comment_creator,
+              task_comment.task_comment_created_at)
+              
+               VALUES (?,?,?,SYSDATE())";
+
+    $stmt = $connection->prepare($query);
+    $stmt->bind_param("sss",$task_id, $task_comment_description,$task_comment_creator);
+    $stmt->execute();
+    $task_comment_id = mysqli_insert_id($connection);
+
+
+    if ($stmt){
+
+        return $validation;
+
+    } else {
+
+        return $error;
+
+    }
+
+});
