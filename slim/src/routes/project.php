@@ -448,7 +448,7 @@ $app->get('/view/task/{id}/{id2}', function (ServerRequestInterface $request,Res
 
 });
 
-$app->post('/add/comment', function ($request, $response) {
+$app->post('/add/task/comment', function ($request, $response) {
 
     $validation = json_encode('The comment has been added to the task');
     $error = json_encode('The comment could not be added to the task');
@@ -475,6 +475,45 @@ $app->post('/add/comment', function ($request, $response) {
     $stmt->execute();
     $task_comment_id = mysqli_insert_id($connection);
 
+
+    if ($stmt){
+
+        return $validation;
+
+    } else {
+
+        return $error;
+
+    }
+
+});
+
+$app->post('/add/project/comment', function ($request, $response) {
+
+    $validation = json_encode('The comment has been added to the project');
+    $error = json_encode('The comment could not be added to the project');
+
+    require_once('dbconnect.php');
+    $connection = connect_db();
+
+    $array = $request->getParsedBody();
+
+    $project_comment_description = $array['description'];
+    $project_id = $array['projectIdForm'];
+    $project_comment_creator = $array['creator'];
+
+    $query = "INSERT INTO kingsub3_FYP.project_comment (
+              project_comment.project_id,
+              project_comment.project_comment_description,
+              project_comment.project_comment_creator,
+              project_comment.project_comment_created_at)
+              
+               VALUES (?,?,?,SYSDATE())";
+
+    $stmt = $connection->prepare($query);
+    $stmt->bind_param("sss",$project_id, $project_comment_description,$project_comment_creator);
+    $stmt->execute();
+    $project_comment_id = mysqli_insert_id($connection);
 
     if ($stmt){
 
