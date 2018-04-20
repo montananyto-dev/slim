@@ -1,5 +1,6 @@
 <?php
 
+
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -17,7 +18,6 @@ $app->get('/view/course', function () {
         header('Content-Type: application/json');
         return json_encode($data);
     }
-
 });
 
 $app->get('/view/courseByOrganisationId/{id}', function (ServerRequestInterface $request,ResponseInterface $response) {

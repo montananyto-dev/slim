@@ -21,6 +21,35 @@ $app->get('/view/module', function () {
     }
 });
 
+$app->get('/view/module/organisation/{id}', function ($request, $response, $args) {
+
+    require_once('dbconnect.php');
+    $connection = connect_db();
+    $error = json_encode("There are no modules for this organisation");
+
+    $id = $request->getAttribute('id');
+
+    $query = "SELECT module.* FROM module
+              INNER JOIN module_course
+              ON module.module_id = module_course.module_id
+              INNER JOIN course
+              ON module_course.course_id = course.course_id
+              INNER JOIN organisation
+              ON course.organisation_id = organisation.organisation_id
+              WHERE organisation.organisation_id = $id";
+
+    $result = $connection->query($query);
+
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
+    if (isset($data)) {
+        return json_encode($data);
+    } else {
+        return json_encode($error);
+    }
+});
+
 $app->get('/return/specific/module[/{id:.*}]', function ($request, $response, $args) {
 
     $id = explode('/', $request->getAttribute('id'));
