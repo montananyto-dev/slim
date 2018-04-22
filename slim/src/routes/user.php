@@ -144,33 +144,29 @@ $app->put('/edit/user',function(ServerRequestInterface $request,ResponseInterfac
     $user_last_name = $request->getParsedBody()['userLastNameForm'];
     $user_phone_number = $request->getParsedBody()['userPhoneNumberForm'];
     $user_Email = $request->getParsedBody()['userEmailForm'];
-    $user_department = $request->getParsedBody()['userDepartmentForm'];
 
     $user_id = array_shift( $user_id);
     $user_first_name = array_shift( $user_first_name);
     $user_last_name = array_shift( $user_last_name);
     $user_phone_number = array_shift( $user_phone_number);
     $user_Email = array_shift( $user_Email);
-    $user_department = array_shift( $user_department);
 
     $query = "UPDATE  kingsub3_FYP.users SET
     user_first_name = ?,
     user_last_name = ?,
     user_email = ?,
-    user_phone_number = ?,
-    user_department = ?
+    user_phone_number = ?
     WHERE user_id = $user_id";
 
 
 
     $stmt = $connection->prepare($query);
 
-    $stmt->bind_param("sssss",
+    $stmt->bind_param("ssss",
         $user_first_name,
         $user_last_name,
         $user_Email,
-        $user_phone_number,
-        $user_department);
+        $user_phone_number);
 
     $stmt->execute();
 
@@ -197,7 +193,6 @@ $app->post('/add/user', function ($request, $response) {
 
     $user_type = $array['userType'];
 
-
     //prepared statements
     $query = "INSERT INTO kingsub3_FYP.users (
 
@@ -208,11 +203,10 @@ $app->post('/add/user', function ($request, $response) {
     user_password,
     user_email,
     user_phone_number,
-    user_department,
     user_date_of_birth,
     user_created_at)
     
-      VALUES (?,?,?,?,?,?,?,?,?,SYSDATE())";
+      VALUES (?,?,?,?,?,?,?,?,SYSDATE())";
 
     $organisation_id = $array['organisation'];
     $user_type_id = $array['userType'];
@@ -222,11 +216,10 @@ $app->post('/add/user', function ($request, $response) {
     $user_date_of_birth = $array['dateOfBirth'];
     $user_email = $array['email'];
     $user_phone_number = $array['phoneNumber'];
-    $user_department = $array['department'];
 
     $stmt = $connection->prepare($query);
 
-    $stmt->bind_param("sssssssss",
+    $stmt->bind_param("ssssssss",
         $organisation_id,
         $user_type_id,
         $user_first_name,
@@ -234,7 +227,6 @@ $app->post('/add/user', function ($request, $response) {
         $user_password,
         $user_email,
         $user_phone_number,
-        $user_department,
         $user_date_of_birth);
 
     $stmt->execute();
@@ -276,23 +268,3 @@ $app->post('/add/user', function ($request, $response) {
     }
 
 });
-
-
-
-
-//
-//$app->get('/view/user', function () {
-//
-//    require_once('dbconnect.php');
-//    $connection = connect_db();
-//    $query = $connection->prepare("SELECT * FROM users");
-//    $query->execute();
-//    $result = $query->fetchAll(\PDO::FETCH_ASSOC);
-//
-//
-//    if (isset($result)) {
-//        header('Content-Type: application/json');
-//        return json_encode($result);
-//    }
-//});
-//

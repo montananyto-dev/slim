@@ -228,9 +228,10 @@ $app->get('/view/allTasks/{id}', function (ServerRequestInterface $request,Respo
     $connection = connect_db();
     $id = $request->getAttribute('id');
 
-    $query = "SELECT task.* FROM task
+    $query = "SELECT task.*,assignee_name FROM task
               INNER JOIN project
               ON project.project_id = task.project_id
+              INNER JOIN assignee a on task.assignee_id = a.assignee_id
               WHERE project.project_id = $id";
 
     $result = $connection->query($query);
@@ -256,9 +257,10 @@ $app->get('/view/taskByStatus/{id}/{id2}', function (ServerRequestInterface $req
     $project_id = $request->getAttribute('id');
     $task_status = $request->getAttribute('id2');
 
-    $query = "SELECT task.* FROM task
+    $query = "SELECT task.*,assignee_name FROM task
               INNER JOIN project
               ON project.project_id = task.project_id
+              INNER JOIN assignee a on task.assignee_id = a.assignee_id
               WHERE project.project_id = $project_id AND task.task_status = $task_status";
 
     $result = $connection->query($query);
